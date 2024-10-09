@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "downward_api_chart.fullname" . }}
+  labels:
+    app: {{ include "downward-api-chart.name" . }}
+spec:
+  replicas: {{ .Values.replicaCount }}  # replicas는 1
+  selector:
+    matchLabels:
+
+
+      app: {{ include "downward-api-chart.name" . }}
+  template:
+    metadata:
+      labels:
+        app: {{ include "downward-api-chart.name" . }}
+    spec:
+      containers:
+        - name: downward-api-container
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - containerPort: {{ .Values.service.port }}  # app.py에 설정된 포트
